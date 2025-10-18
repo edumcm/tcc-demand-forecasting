@@ -1,0 +1,51 @@
+Estrutura de diretórios e arquivos — Projeto
+Local: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting
+
+tcc-demand-forecasting/
+    README.md
+    LICENSE
+    requirements.txt
+    .gitignore
+    gera_lista_arquivos.ipynb
+    estrutura_projeto.txt
+    data (1)/
+        raw/
+            olist_sellers_dataset.csv
+            product_category_name_translation.csv
+            olist_customers_dataset.csv
+            olist_products_dataset.csv
+            olist_orders_dataset.csv
+            olist_order_reviews_dataset.csv
+            olist_order_payments_dataset.csv
+            olist_order_items_dataset.csv
+            olist_geolocation_dataset.csv
+        interim/
+        processed/
+    artifacts/
+        oof/
+        predictions/
+        metrics/
+        figures/
+        hpo/
+        config_snapshots/
+            requirements-20250920-091440.txt
+            requirements-20250923-223540.txt
+    reports/
+        figures/
+        tables/
+    src/
+        data/
+            loader.py
+            __pycache__/
+                loader.cpython-312.pyc
+        features/
+        models/
+        evaluations/
+        pipelines/
+    configs/
+        data.yaml
+        cv.yaml
+        features.yaml
+    notebooks/
+        00_colab_bootstrap.ipynb
+        01_eda_oveview.ipynb
