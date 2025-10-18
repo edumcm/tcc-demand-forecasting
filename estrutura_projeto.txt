@@ -6,9 +6,10 @@ tcc-demand-forecasting/
     LICENSE
     requirements.txt
     .gitignore
-    gera_lista_arquivos.ipynb
+    lista_arquivos_git.ipynb
     estrutura_projeto.txt
-    data (1)/
+    data/
+        .gitkeep
         raw/
             olist_sellers_dataset.csv
             product_category_name_translation.csv
@@ -22,6 +23,7 @@ tcc-demand-forecasting/
         interim/
         processed/
     artifacts/
+        .gitkeep
         oof/
         predictions/
         metrics/
@@ -31,6 +33,7 @@ tcc-demand-forecasting/
             requirements-20250920-091440.txt
             requirements-20250923-223540.txt
     reports/
+        .gitkeep
         figures/
         tables/
     src/
