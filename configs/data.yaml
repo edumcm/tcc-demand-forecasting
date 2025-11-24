@@ -1,11 +1,11 @@
 paths:
-  data_dir: /content/drive/MyDrive/tcc-modelo/data
-  artifacts_dir: /content/drive/MyDrive/tcc-modelo/artifacts
-  reports_dir: /content/drive/MyDrive/tcc-modelo/reports
+  data_dir: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting/data
+  artifacts_dir: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting/artifacts
+  reports_dir: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting/reports
 datasets:
   olist:
-    raw_dir: /content/drive/MyDrive/tcc-modelo/data/raw
-    interim_dir: /content/drive/MyDrive/tcc-modelo/data/interim
-    processed_dir: /content/drive/MyDrive/tcc-modelo/data/processed
+    raw_dir: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting/data/raw
+    interim_dir: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting/data/interim
+    processed_dir: /content/drive/MyDrive/tcc-modelo/tcc-demand-forecasting/data/processed
 timezone: America/Fortaleza
 date_format: '%Y-%m-%d'
