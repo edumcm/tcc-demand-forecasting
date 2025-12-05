@@ -1,9 +1,0 @@
-strategy: expanding_window
-horizons:
-- 7
-- 28
-n_folds: 6
-gap_days: 2
-stride: 7
-group_col: sku_id
-time_col: order_purchase_timestamp

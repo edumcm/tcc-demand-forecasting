@@ -2,7 +2,7 @@
 """
 Imputação de valores nulos nas features agregadas (Olist).
 
-1) Variações de preço e de vendas (ex.: price_var_*, qty_var_*):
+1) Variações de preço e de vendas (ex.: price_var_*, qty_var_*, sales_*):
    -> imputar 0 (interpretação: "sem variação conhecida").
 2) Lags e rollings: manter NaN (janelas iniciais são naturalmente incompletas).
 3) Métricas regionais (ex.: *_n, *_ne, *_se, *_s, *_co): manter NaN porque
@@ -11,6 +11,9 @@ Imputação de valores nulos nas features agregadas (Olist).
    feature de ENTRADA do modelo (exclui automaticamente colunas regionais e
    outras que podem ser listadas em EXCLUDE_FROM_HAVE_NULLS).
 
+Compatível com bases temporais agregadas:
+- Semanal (coluna 'order_week')
+- Diária (coluna 'order_date')
 """
 
 from __future__ import annotations
@@ -52,6 +55,7 @@ LOGGER.setLevel(logging.INFO)
 # -----------------------------------------------------------------------------
 # Constantes / Config
 # -----------------------------------------------------------------------------
+# (padrões pensados para fluxo semanal; para diário basta passar outros nomes)
 DEFAULT_INPUT_NAME = "olist_weekly_agg_withlags.parquet"
 DEFAULT_OUTPUT_NAME = "olist_weekly_agg_withlags_imputed.parquet"
 
@@ -59,7 +63,7 @@ DEFAULT_OUTPUT_NAME = "olist_weekly_agg_withlags_imputed.parquet"
 VARIATION_PREFIXES = [
     "price_var",        # ex.: price_var_m4_vs_prev4_mean, price_var_lag1 ...
     "qty_var",          # ex.: qty_var_m4_vs_prev4_mean ...
-    "sales",   
+    "sales",            # ex.: sales_qty, sales_*  (pode ser tratado como "sem venda" = 0)
 ]
 
 # Padrões para identificar colunas regionais que NÃO entram no modelo
@@ -69,13 +73,19 @@ REGIONAL_REGEX = re.compile(rf"({'|'.join(s.strip('_') for s in REGIONAL_SUFFIXE
 
 # Colunas que certamente não devem entrar no cálculo de have_nulls
 EXCLUDE_FROM_HAVE_NULLS = {
-    "product_category_name",
+    # chaves temporais (se estiverem presentes)
     "order_week",
+    "order_date",
     "year_week",
-    "sales_qty",            
+    # alvo / métricas agregadas principais
+    "sales_qty",
     "revenue",
+    # (product_category_name foi removida pois a base final não é mais por categoria)
 }
 
+# -----------------------------------------------------------------------------
+# Helpers de caminho / validação
+# -----------------------------------------------------------------------------
 def _as_project_dir(explicit: Optional[str | os.PathLike] = None) -> Path:
     if explicit:
         return Path(explicit).resolve()
@@ -127,13 +137,15 @@ def _model_feature_candidates(df: pd.DataFrame) -> list[str]:
 def impute_nulls(df: pd.DataFrame) -> pd.DataFrame:
     """
     Aplica a política de imputação:
-      - Variações de preço e vendas: fillna(0)
+      - Variações de preço e vendas (prefixos em VARIATION_PREFIXES): fillna(0)
       - Regionais, lags e rollings: manter NaN
       - Cria 'have_nulls' após imputação, olhando apenas para features de ENTRADA
-        (exclui regionais e colunas de exclusão explícita)
+        (exclui regionais e colunas de exclusão explícita).
+
+    Compatível com bases agregadas sem categoria e com qualquer coluna temporal
+    (order_week, order_date, etc.).
     """
     df = df.copy()
-    _require_columns(df, ["product_category_name"])
 
     # 1) Imputação de 0 nas variações (preço/vendas)
     var_cols = _variation_columns(df)
@@ -143,7 +155,7 @@ def impute_nulls(df: pd.DataFrame) -> pd.DataFrame:
         after = int(df[var_cols].isna().sum().sum())
         LOGGER.info("Variações imputadas em 0: %d faltantes -> %d.", before, after)
     else:
-        LOGGER.info("Nenhuma coluna de variação encontrada (price/qty).")
+        LOGGER.info("Nenhuma coluna de variação encontrada (price/qty/sales).")
 
     # 2) NÃO imputar regionais, lags e rollings (mantém NaN)
     #    Nada a fazer aqui: a ausência é intencional.
@@ -169,7 +181,8 @@ def build_imputed_dataset(
     project_dir: Optional[str | os.PathLike] = None,
 ) -> Path:
     """
-    1) Lê o parquet agregado (saída do aggregation.py).
+    1) Lê o parquet agregado (saída do build_features / aggregation).
+       Pode ser semanal (order_week) ou diário (order_date), não importa.
     2) Aplica imputação conforme regras definidas.
     3) Salva parquet imputado em data/interim/.
     """
@@ -181,7 +194,7 @@ def build_imputed_dataset(
     if not in_path.exists():
         raise FileNotFoundError(f"Arquivo de entrada não encontrado: {in_path}")
 
-    LOGGER.info("Lendo agregado semanal: %s", in_path)
+    LOGGER.info("Lendo agregado temporal: %s", in_path)
     df = pd.read_parquet(in_path)
 
     # Diagnóstico pré-imputação
