@@ -1,6 +1,6 @@
-# 📦 Projeto de Previsão de Demanda — Olist (TCC)
+# Projeto de Previsão de Demanda — Olist (TCC)
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 tcc-demand-forecasting/  
 ├─ LICENSE  
@@ -38,27 +38,20 @@ tcc-demand-forecasting/
 │  ├─ 02_preprocessamento.ipynb  
 │  ├─ 03_analise_features.ipynb  
 │  └─ 04_experiments.ipynb  
-├─ artifacts/  
-│  ├─ oof/  
-│  ├─ predictions/  
-│  ├─ metrics/  
-│  ├─ figures/  
-│  ├─ hpo/  
-│  └─ config_snapshots/  
 └─ reports/  
    ├─ tables/  
    └─ figures/  
 
 ---
 
-# 📘 Descrição do Projeto
+# Descrição do Projeto
 
 Este projeto implementa um pipeline completo de previsão de demanda utilizando o dataset público da Olist.  
 O objetivo é prever as vendas totais ao longo do tempo, aplicando modelos estatísticos e de machine learning.
 
 ---
 
-# 🎯 Objetivos
+# Objetivos
 
 - Prever vendas totais agregadas ao longo do tempo.  
 - Construir pipeline modular e completo.  
@@ -68,7 +61,7 @@ O objetivo é prever as vendas totais ao longo do tempo, aplicando modelos estat
 
 ---
 
-# 🔄 Fluxo do Projeto
+# Fluxo do Projeto
 
 ## 1. Carregamento dos Dados  
 Leitura de CSVs em data/raw usando configs/data.yaml.
@@ -102,7 +95,7 @@ Real vs predito em reports/figures.
 
 ---
 
-# 📒 Execução via Notebooks
+# Execução via Notebooks
 
 - 00_colab_bootstrap.ipynb  
 - 01_eda_overview.ipynb  
@@ -112,13 +105,13 @@ Real vs predito em reports/figures.
 
 ---
 
-# ⚙️ Instalação
+# Instalação
 
 pip install -r requirements.txt
 
 ---
 
-# 📁 Pastas de Destaque
+# Pastas de Destaque
 
 - data/raw — dados brutos  
 - data/interim — dados tratados  
@@ -127,6 +120,6 @@ pip install -r requirements.txt
 
 ---
 
-# 📄 Licença
+# Licença
 
 MIT License
